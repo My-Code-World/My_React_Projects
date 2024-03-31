@@ -1,0 +1,44 @@
+import React, { useState, useRef , useEffect} from 'react';
+
+function ColorFlip() {
+    const [color, setColor] = useState("#FFFFFF"); // Default color white
+    const buttonRef = useRef(null);
+    const [click,newClick]=useState(false);
+    const array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F"];
+
+    const randomNumberGenerator = () => {
+        let random = '#';
+        for (let i = 0; i < 6; i++) {
+            random += array[Math.floor(Math.random() * array.length)];
+        }
+        setColor(random);
+        document.body.style.backgroundColor = random;
+    }
+
+    const autoClick = () => {
+        randomNumberGenerator();
+    }
+
+    useEffect(() => {
+        let intervalId;
+        if (click) {
+            intervalId = setInterval(autoClick, 1000);
+        } else {
+            clearInterval(intervalId);
+        }
+
+        // Clear the interval when component unmounts or click state changes
+        return () => clearInterval(intervalId);
+    }, [click]);
+
+    return (
+        <div>
+            <p>{color}</p>
+            <button ref={buttonRef} onClick={() => newClick(!click)}>
+                {click ? "Stop Flipping" : "Start Flipping"}
+            </button>
+        </div>
+    );
+}
+
+export default ColorFlip;
